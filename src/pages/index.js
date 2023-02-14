@@ -1,13 +1,24 @@
 import Head from 'next/head';
+import Image from 'next/image';
 
+import Card from '@/components/card';
 import Banner from '@/components/banner';
+
+import coffeeStores from '/data/coffee-stores.json';
 
 import styles from '@/styles/Home.module.css';
 
-export default function Home() {
-  const handleBannerBtnClick = () => {
-    console.log('handleBannerBtnClick');
+export async function getStaticProps(context) {
+  return {
+    props: {
+      coffeeStores,
+    }, // will be passed to the page component as props
   };
+}
+
+export default function Home(props) {
+  const handleBannerBtnClick = () => console.log('handleBannerBtnClick');
+
   return (
     <div className={styles.container}>
       <Head>
@@ -21,6 +32,26 @@ export default function Home() {
           buttonText="View stores nearby"
           handleOnClick={handleBannerBtnClick}
         />
+        <Image
+          src="/static/hero-image.png"
+          alt="lady drinking coffee on a cloud"
+          className={styles.heroImage}
+          width={700}
+          height={400}
+          priority
+        />
+        <div className={styles.cardLayout}>
+          {props.coffeeStores.map((store, idx) => (
+            <Card
+              key={store.id}
+              name={store.name}
+              link={`/coffee-store/${store.id}`}
+              imgUrl={store.imgUrl}
+              className={styles.card}
+              imgPriority={idx <= 2}
+            />
+          ))}
+        </div>
       </main>
     </div>
   );
