@@ -4,14 +4,14 @@ import Image from 'next/image';
 import Card from '@/components/card';
 import Banner from '@/components/banner';
 
-import coffeeStores from '/data/coffee-stores.json';
+import coffeeStoresData from '/data/coffee-stores.json';
 
 import styles from '@/styles/Home.module.css';
 
 export async function getStaticProps(context) {
   return {
     props: {
-      coffeeStores,
+      coffeeStores: coffeeStoresData,
     }, // will be passed to the page component as props
   };
 }
@@ -40,18 +40,23 @@ export default function Home(props) {
           height={400}
           priority
         />
-        <div className={styles.cardLayout}>
-          {props.coffeeStores.map((store, idx) => (
-            <Card
-              key={store.id}
-              name={store.name}
-              link={`/coffee-store/${store.id}`}
-              imgUrl={store.imgUrl}
-              className={styles.card}
-              imgPriority={idx <= 2}
-            />
-          ))}
-        </div>
+        {props.coffeeStores.length > 0 && (
+          <>
+            <h2 className={styles.heading2}>Toronto stores</h2>
+            <div className={styles.cardLayout}>
+              {props.coffeeStores.map((store, idx) => (
+                <Card
+                  key={store.id}
+                  name={store.name}
+                  link={`/coffee-store/${store.id}`}
+                  imgUrl={store.imgUrl}
+                  className={styles.card}
+                  imgPriority={idx <= 2}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
